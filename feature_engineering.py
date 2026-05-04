@@ -63,14 +63,19 @@ LAB_COLS = ['kanser_turu', 'cinsiyet', 'doğum tarihi',
             'işlem tipi', 'işlem tarihi', 'eşlikedentanı', 'eşlikedentanı tarihi', 'oluşturma tarihi.1']
 DATE_COLS = [c + "_dates" for c in LAB_COLS]
 
+
+'''
 for col in LAB_COLS:
     df[col + "_vals"] = df[col].apply(parse_bracketed_list)
+
 for col1 in DATE_COLS:
     for col in LAB_COLS:
         df[col1] = df[col].apply(parse_date_list)
+'''
+        
 
-df.to_csv('gruplanmis_veriseti.csv', index=False)
+# df.to_csv('gruplanmis_veriseti.csv', index=False)
 
-print(df)
+print(df.iloc[1])
 
 # End of larp.
