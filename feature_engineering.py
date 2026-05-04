@@ -69,6 +69,8 @@ for col1 in DATE_COLS:
     for col in LAB_COLS:
         df[col1] = df[col].apply(parse_date_list)
 
+df.to_csv('gruplanmis_veriseti.csv', index=False)
+
 print(df)
 
 # End of larp.
