@@ -44,3 +44,70 @@ for i in range(rows_number):
 
 # (Eren) Task 1 is done. I now have values for Y as the death status.
 
+# (Eren) Our next task is to group values with their relative timestamps.
+
+# For that, I will count the number of unique timestamps, and then I will squish the
+# data of time and value columns together on one column.
+# I need to create one new column, and remove the old ones afterwards.
+
+# print(cols)
+
+transform_dict = {column: column + ' tarihi' for column in cols if ((' tarihi' not in column) and (not (column == 'kanser_turu' or column == 'cinsiyet' or column == 'doğum tarihi'
+                  or column == 'department' or column == 'oluşturma tarihi' or column == 'ölüm durumu' or column == 'ölüm tarihi' or column == 'epikriz' or column == 'ilac' or column == 'icd10' or column == 'işlem adı'
+                  or column == 'işlem tipi' or column == 'işlem tarihi' or column == 'oluşturma tarihi.1')))}
+
+# (Eren) After losing a decent ammount of my sanity on this problem manually, I achieved to get a dictionart to work with.
+# But I still wonder if that was worth it.
+
+'''
+I will list the columns here to modify.
+'kanser_turu', 'cinsiyet', 'doğum tarihi', 'department',
+'oluşturma tarihi', 'ölüm durumu', 'ölüm tarihi', 'epikriz',
+'ilac', 'icd10', 'işlem adı',
+'işlem tipi', 'işlem tarihi'
+'oluşturma tarihi.1'
+
+'''
+
+# Now I will use this dictionary to modify those columns, and count the number of unique timestamps.
+
+cols_list = list(cols)
+
+transform_list = [cols_list.index(key) for key in transform_dict.values()]
+
+# print('transform_list: ', transform_list, '\n') # I will print the list to see if it is correct.
+
+# list_of_number_of_timestamps = []
+
+'''
+for key in transform_dict.keys():
+
+    pos = cols_list.index(key)
+
+    for _ in range(1, 100):
+
+        if df.iloc[_, pos] is not float:
+            
+            #print(df.iloc[_, pos])
+            list_of_number_of_timestamps.append(df[key].astype(str).str.len())
+
+        else:
+
+            list_of_number_of_timestamps.append(1)
+
+'''
+# (Eren) I will print the list to see if it is correct.
+
+# print('list_of_number_of_timestamps: ', list_of_number_of_timestamps)
+# print('Number of 1s: ', list_of_number_of_timestamps.count(1))
+
+# (Eren) Now, we learned that except it is 'oluşturma tarihi' and 'oluşturma tarihi.1', all the columns have 500 timestamps.
+# Now, we use that information and continue with our mission. Also, don't forget to save this one.
+
+# TIMESTAMP_COUNT = 500
+
+
+# I give up on this, I will manually count one of them.
+
+
+print([df.iloc[:, elem] for elem in transform_list])
