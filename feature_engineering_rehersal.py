@@ -73,11 +73,15 @@ I will list the columns here to modify.
 
 cols_list = list(cols)
 
-transform_list = [cols_list.index(key) for key in transform_dict.values()]
+print('transform_dict: ', transform_dict, '\n') # I will print the dictionary to see if it is correct.
+
+# transform_list = [cols_list.index(value) for value in transform_dict.values()]
+
+transform_list = [cols_list.index(value) for value in transform_dict.values() if value in cols_list]
 
 # print('transform_list: ', transform_list, '\n') # I will print the list to see if it is correct.
 
-# list_of_number_of_timestamps = []
+list_of_number_of_timestamps = []
 
 '''
 for key in transform_dict.keys():
@@ -110,4 +114,12 @@ for key in transform_dict.keys():
 # I give up on this, I will manually count one of them.
 
 
-print([df.iloc[:, elem] for elem in transform_list])
+# print([df.iloc[:, elem] for elem in transform_list])
+
+print(list_of_number_of_timestamps)
+
+for elem in transform_list:
+
+    list_of_number_of_timestamps.append(df.iloc[0, elem].count('['))
+
+print('list_of_number_of_timestamps: ', list_of_number_of_timestamps)
