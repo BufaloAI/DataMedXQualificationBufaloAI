@@ -18,9 +18,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '16'
+      - name: Prepare static site
+        run: |
+          mkdir -p site
+          cp index.html model.html style.css app.js site/
+          touch site/.nojekyll
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          publish_dir: ./website
+          publish_dir: ./site
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
