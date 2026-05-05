@@ -28,4 +28,4 @@ def count_timestamps(column_index: int) -> list:
 
     return timestamp_length
 
-print('Timestamp lengths for column 0:', count_timestamps(0), '\nTimestamp lengths for column 10:', count_timestamps(10))
+print('Timestamp lengths for column 0:', count_timestamps(0), '\nTimestamp lengths for column 6:', count_timestamps(6))
