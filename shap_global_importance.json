@@ -1,0 +1,306 @@
+[
+  {
+    "feature": "num__albumin_last",
+    "mean_abs_shap": 0.0615378425451346
+  },
+  {
+    "feature": "num__üre_last",
+    "mean_abs_shap": 0.04843766411183214
+  },
+  {
+    "feature": "num__crp_last",
+    "mean_abs_shap": 0.0340623608418963
+  },
+  {
+    "feature": "num__kalsiyum_last",
+    "mean_abs_shap": 0.030195368782847554
+  },
+  {
+    "feature": "num__albumin_slope",
+    "mean_abs_shap": 0.025763316521666094
+  },
+  {
+    "feature": "num__crp_slope",
+    "mean_abs_shap": 0.025043914278078026
+  },
+  {
+    "feature": "num__üre_slope",
+    "mean_abs_shap": 0.02483932658992029
+  },
+  {
+    "feature": "num__albumin_mean",
+    "mean_abs_shap": 0.024465697160830156
+  },
+  {
+    "feature": "num__ldh_last",
+    "mean_abs_shap": 0.02310135382096082
+  },
+  {
+    "feature": "num__kreatinin_last",
+    "mean_abs_shap": 0.022980597386853974
+  },
+  {
+    "feature": "num__ast_last",
+    "mean_abs_shap": 0.021613495568404
+  },
+  {
+    "feature": "num__ldh_mean",
+    "mean_abs_shap": 0.015250953350992198
+  },
+  {
+    "feature": "cat__oluşturma tarihi",
+    "mean_abs_shap": 0.014646976488275764
+  },
+  {
+    "feature": "num__ggt_slope",
+    "mean_abs_shap": 0.012357150358550964
+  },
+  {
+    "feature": "num__ggt_last",
+    "mean_abs_shap": 0.011616081561120437
+  },
+  {
+    "feature": "num__bun_last",
+    "mean_abs_shap": 0.011605215614388653
+  },
+  {
+    "feature": "num__bilirubin_last",
+    "mean_abs_shap": 0.009499090803247482
+  },
+  {
+    "feature": "num__crp_mean",
+    "mean_abs_shap": 0.008751012031848294
+  },
+  {
+    "feature": "cat__epikriz",
+    "mean_abs_shap": 0.008338430937181882
+  },
+  {
+    "feature": "num__kalsiyum_mean",
+    "mean_abs_shap": 0.008032924065951262
+  },
+  {
+    "feature": "num__ast_slope",
+    "mean_abs_shap": 0.007400615257038625
+  },
+  {
+    "feature": "num__kalsiyum_slope",
+    "mean_abs_shap": 0.007385745835324935
+  },
+  {
+    "feature": "num__crp_count",
+    "mean_abs_shap": 0.006165865718850153
+  },
+  {
+    "feature": "num__ast_mean",
+    "mean_abs_shap": 0.005422248141404228
+  },
+  {
+    "feature": "num__bun_slope",
+    "mean_abs_shap": 0.004923172271529434
+  },
+  {
+    "feature": "num__alp_last",
+    "mean_abs_shap": 0.004801633666854154
+  },
+  {
+    "feature": "num__üre_mean",
+    "mean_abs_shap": 0.004738916586902751
+  },
+  {
+    "feature": "num__kreatinin_slope",
+    "mean_abs_shap": 0.004662312409893103
+  },
+  {
+    "feature": "num__alp_slope",
+    "mean_abs_shap": 0.004623324440520049
+  },
+  {
+    "feature": "num__magnezyum_last",
+    "mean_abs_shap": 0.00455956120065101
+  },
+  {
+    "feature": "num__bilirubin_slope",
+    "mean_abs_shap": 0.004089705157602029
+  },
+  {
+    "feature": "num__ggt_mean",
+    "mean_abs_shap": 0.003730666429665127
+  },
+  {
+    "feature": "num__klor_mean",
+    "mean_abs_shap": 0.0030699353446303696
+  },
+  {
+    "feature": "num__ldh_slope",
+    "mean_abs_shap": 0.0027322414284198047
+  },
+  {
+    "feature": "num__sodyum_last",
+    "mean_abs_shap": 0.0027148868786761276
+  },
+  {
+    "feature": "cat__işlem tipi",
+    "mean_abs_shap": 0.002578032587326775
+  },
+  {
+    "feature": "num__potasyum_last",
+    "mean_abs_shap": 0.0025472532078395956
+  },
+  {
+    "feature": "num__klor_last",
+    "mean_abs_shap": 0.0025053084419493672
+  },
+  {
+    "feature": "cat__department",
+    "mean_abs_shap": 0.0024544683330367744
+  },
+  {
+    "feature": "num__alt_count",
+    "mean_abs_shap": 0.0024262858018364503
+  },
+  {
+    "feature": "num__magnezyum_mean",
+    "mean_abs_shap": 0.0023377656877838064
+  },
+  {
+    "feature": "num__bilirubin_mean",
+    "mean_abs_shap": 0.0023104841768865343
+  },
+  {
+    "feature": "num__alp_mean",
+    "mean_abs_shap": 0.002066129004117285
+  },
+  {
+    "feature": "num__bilirubin_count",
+    "mean_abs_shap": 0.0020380046095954374
+  },
+  {
+    "feature": "num__kreatinin_count",
+    "mean_abs_shap": 0.0020057042831021425
+  },
+  {
+    "feature": "num__alt_last",
+    "mean_abs_shap": 0.0018545495079046789
+  },
+  {
+    "feature": "num__bun_mean",
+    "mean_abs_shap": 0.0018533447710894968
+  },
+  {
+    "feature": "num__kalsiyum_count",
+    "mean_abs_shap": 0.0018220964810755705
+  },
+  {
+    "feature": "num__alt_slope",
+    "mean_abs_shap": 0.001727673881364668
+  },
+  {
+    "feature": "num__potasyum_mean",
+    "mean_abs_shap": 0.001708705559468434
+  },
+  {
+    "feature": "num__üre_count",
+    "mean_abs_shap": 0.001660501641908329
+  },
+  {
+    "feature": "cat__kanser_turu",
+    "mean_abs_shap": 0.0016565715452388579
+  },
+  {
+    "feature": "num__hba1c_count",
+    "mean_abs_shap": 0.001521355471230846
+  },
+  {
+    "feature": "cat__atc kod",
+    "mean_abs_shap": 0.0015148688342532881
+  },
+  {
+    "feature": "num__potasyum_count",
+    "mean_abs_shap": 0.001491420875477444
+  },
+  {
+    "feature": "num__klor_slope",
+    "mean_abs_shap": 0.0013908239717839465
+  },
+  {
+    "feature": "num__potasyum_slope",
+    "mean_abs_shap": 0.0013868506534941787
+  },
+  {
+    "feature": "num__kreatinin_mean",
+    "mean_abs_shap": 0.0013051453683626305
+  },
+  {
+    "feature": "num__magnezyum_slope",
+    "mean_abs_shap": 0.0012887078437926998
+  },
+  {
+    "feature": "num__sodyum_mean",
+    "mean_abs_shap": 0.001114348931572795
+  },
+  {
+    "feature": "num__klor_count",
+    "mean_abs_shap": 0.0010885482177410777
+  },
+  {
+    "feature": "num__hba1c_mean",
+    "mean_abs_shap": 0.0010834657147061465
+  },
+  {
+    "feature": "num__alt_mean",
+    "mean_abs_shap": 0.0010668727858616316
+  },
+  {
+    "feature": "num__albumin_count",
+    "mean_abs_shap": 0.000991256930037072
+  },
+  {
+    "feature": "num__magnezyum_count",
+    "mean_abs_shap": 0.0009875223813329704
+  },
+  {
+    "feature": "num__ggt_count",
+    "mean_abs_shap": 0.0009777352722013547
+  },
+  {
+    "feature": "num__hba1c_slope",
+    "mean_abs_shap": 0.0009698302615634219
+  },
+  {
+    "feature": "num__doğum tarihi",
+    "mean_abs_shap": 0.0009108731893948346
+  },
+  {
+    "feature": "num__ast_count",
+    "mean_abs_shap": 0.0008985480588399087
+  },
+  {
+    "feature": "num__bun_count",
+    "mean_abs_shap": 0.000802695533110111
+  },
+  {
+    "feature": "num__sodyum_slope",
+    "mean_abs_shap": 0.0007471133405988606
+  },
+  {
+    "feature": "num__alp_count",
+    "mean_abs_shap": 0.0007261089993433564
+  },
+  {
+    "feature": "num__hba1c_last",
+    "mean_abs_shap": 0.0006807339645998102
+  },
+  {
+    "feature": "num__ldh_count",
+    "mean_abs_shap": 0.000637794458240857
+  },
+  {
+    "feature": "num__sodyum_count",
+    "mean_abs_shap": 0.0005254380988363372
+  },
+  {
+    "feature": "cat__cinsiyet",
+    "mean_abs_shap": 0.0003834036302073622
+  }
+]
