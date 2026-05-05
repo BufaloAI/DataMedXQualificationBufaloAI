@@ -1,33 +1,21 @@
-name: Deploy website to GitHub Pages
+name: Deploy website to GitHub Pages (gh-pages branch)
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Copy website to public
-        run: |
-          rm -rf public
-          cp -r website public
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Setup Node (for consistent shells)
+        uses: actions/setup-node@v4
         with:
-          path: public
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    steps:
-      - uses: actions/deploy-pages@v1
+          node-version: '16'
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./website
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
