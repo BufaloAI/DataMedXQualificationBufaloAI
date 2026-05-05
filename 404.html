@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="tr">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Yönlendiriliyorsunuz</title>
+	<script>
+		const path = window.location.pathname;
+		if (path !== '/' && !path.endsWith('.html') && !path.endsWith('.css') && !path.endsWith('.js') && !path.endsWith('.json') && !path.endsWith('.csv')) {
+			window.location.replace('/index.html' + (path === '/404.html' ? '' : ''));
+		}
+	</script>
+</head>
+<body>
+	<p>Yönlendiriliyorsunuz...</p>
+</body>
+</html>

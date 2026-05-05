@@ -22,7 +22,7 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p site
-          cp index.html model.html style.css app.js site/
+          cp index.html model.html 404.html style.css app.js site/
           touch site/.nojekyll
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
