@@ -84,7 +84,7 @@
   "leakage_columns_removed": [
     "ölüm tarihi"
   ],
-  "absolute_death_signal": "olum_tarihi_var",
+  "model_mode": "absolute_death_normal",
   "train_test_ratio": "80/20",
   "train_size": 400,
   "test_size": 100,

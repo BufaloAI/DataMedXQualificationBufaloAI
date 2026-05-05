@@ -1,3 +1,4 @@
+import argparse
 import json
 import pickle
 from pathlib import Path
@@ -14,31 +15,64 @@ from sklearn.preprocessing import OrdinalEncoder
 
 RANDOM_STATE = 42
 TEST_SIZE = 0.20
+TARGET_COLUMN = "ölüm durumu"
+DEATH_DATE_COLUMN = "ölüm tarihi"
+ABSOLUTE_SIGNAL_COLUMN = "olum_tarihi_var"
 
 DATA_PATH = Path("final_veriseti.csv")
 MODEL_PATH = Path("rf_non_absolute_survival_model.pkl")
 METADATA_PATH = Path("rf_non_absolute_survival_metadata.json")
 
 
-def build_and_train_model() -> None:
-	# (Eren) I load the dataset and keep only valid binary values in the target.
-	df = pd.read_csv(DATA_PATH)
+MODE_CONFIG = {
+	"normal": {
+		"model_path": Path("rf_survival_model.pkl"),
+		"metadata_path": Path("rf_survival_metadata.json"),
+		"model_mode": "absolute_death_normal",
+	},
+	"until_time": {
+		"model_path": MODEL_PATH,
+		"metadata_path": METADATA_PATH,
+		"model_mode": "leakage_safe_non_absolute_death",
+	},
+}
 
-	if "ölüm durumu" not in df.columns:
-		raise ValueError("'ölüm durumu' column was not found in final_veriseti.csv")
 
-	df = df.dropna(subset=["ölüm durumu"]).copy()
-	df["ölüm durumu"] = pd.to_numeric(df["ölüm durumu"], errors="coerce")
-	df = df[df["ölüm durumu"].isin([0, 1])].copy()
-	df["ölüm durumu"] = df["ölüm durumu"].astype(int)
+def _resolve_training_source(data_path: Path, external_training_data: str | None) -> Path:
+	if external_training_data:
+		return Path(external_training_data)
+	return data_path
 
-	# (Eren) This is the leakage-safe setup: I remove death date and any derivative of death date.
-	leakage_columns = ["ölüm tarihi", "olum_tarihi_var"]
-	feature_columns = [col for col in df.columns if col not in ["ölüm durumu"] + leakage_columns]
 
-	X = df[feature_columns].copy()
-	y = df["ölüm durumu"].copy()
+def _clean_target(df: pd.DataFrame) -> pd.DataFrame:
+	if TARGET_COLUMN not in df.columns:
+		raise ValueError(f"'{TARGET_COLUMN}' column was not found in final_veriseti.csv")
 
+	df = df.dropna(subset=[TARGET_COLUMN]).copy()
+	df[TARGET_COLUMN] = pd.to_numeric(df[TARGET_COLUMN], errors="coerce")
+	df = df[df[TARGET_COLUMN].isin([0, 1])].copy()
+	df[TARGET_COLUMN] = df[TARGET_COLUMN].astype(int)
+	return df
+
+
+def _prepare_dataset(df: pd.DataFrame, mode: str) -> tuple[pd.DataFrame, list[str], list[str]]:
+	if mode not in MODE_CONFIG:
+		raise ValueError("mode must be either 'normal' or 'until_time'")
+
+	df = _clean_target(df)
+	leakage_columns: list[str] = []
+
+	if mode == "normal" and DEATH_DATE_COLUMN in df.columns:
+		df[ABSOLUTE_SIGNAL_COLUMN] = df[DEATH_DATE_COLUMN].notna().astype(int)
+		leakage_columns = [DEATH_DATE_COLUMN]
+	elif mode == "until_time":
+		leakage_columns = [DEATH_DATE_COLUMN, ABSOLUTE_SIGNAL_COLUMN]
+
+	feature_columns = [col for col in df.columns if col not in [TARGET_COLUMN] + leakage_columns]
+	return df, feature_columns, [col for col in leakage_columns if col in df.columns]
+
+
+def _build_pipeline(X: pd.DataFrame) -> Pipeline:
 	numeric_columns = X.select_dtypes(include=["number"]).columns.tolist()
 	categorical_columns = [col for col in X.columns if col not in numeric_columns]
 
@@ -79,12 +113,27 @@ def build_and_train_model() -> None:
 		n_jobs=-1,
 	)
 
-	pipeline = Pipeline(
+	return Pipeline(
 		steps=[
 			("preprocessor", preprocessor),
 			("model", model),
 		]
 	)
+
+
+def build_and_train_model(
+	mode: str = "until_time",
+	data_path: Path = DATA_PATH,
+	external_training_data: str | None = None,
+) -> None:
+	# (Eren) I load either the bundled dataset or an external CSV supplied by the doctor.
+	training_source = _resolve_training_source(data_path, external_training_data)
+	df = pd.read_csv(training_source)
+	df, feature_columns, leakage_columns = _prepare_dataset(df, mode)
+
+	X = df[feature_columns].copy()
+	y = df[TARGET_COLUMN].copy()
+	pipeline = _build_pipeline(X)
 
 	X_train, X_test, y_train, y_test = train_test_split(
 		X,
@@ -101,38 +150,44 @@ def build_and_train_model() -> None:
 	report_text = classification_report(y_test, y_pred, digits=4)
 	cm = confusion_matrix(y_test, y_pred).tolist()
 
-	print("Leakage-safe model performance on 80/20 split")
+	print(f"Model mode: {mode}")
+	print(f"Training source: {training_source}")
+	print("Model performance on 80/20 split")
 	print(f"Accuracy: {accuracy:.4f}")
 	print("Confusion matrix:")
 	print(cm)
 	print("Classification report:")
 	print(report_text)
 
-	# (Eren) I save the model bundle with train/test data for SHAP and website usage.
 	model_bundle = {
 		"pipeline": pipeline,
 		"feature_columns": feature_columns,
-		"target_column": "ölüm durumu",
+		"target_column": TARGET_COLUMN,
 		"train_size": len(X_train),
 		"test_size": len(X_test),
 		"accuracy": float(accuracy),
 		"random_state": RANDOM_STATE,
+		"mode": mode,
+		"training_source": str(training_source),
 		"X_train": X_train,
 		"X_test": X_test,
 		"y_train": y_train,
 		"y_test": y_test,
 	}
 
-	with MODEL_PATH.open("wb") as f:
+	model_path = MODE_CONFIG[mode]["model_path"]
+	metadata_path = MODE_CONFIG[mode]["metadata_path"]
+
+	with model_path.open("wb") as f:
 		pickle.dump(model_bundle, f)
 
 	metadata = {
-		"data_file": str(DATA_PATH),
-		"model_file": str(MODEL_PATH),
-		"target_column": "ölüm durumu",
+		"data_file": str(training_source),
+		"model_file": str(model_path),
+		"target_column": TARGET_COLUMN,
 		"feature_columns": feature_columns,
-		"leakage_columns_removed": [c for c in leakage_columns if c in df.columns],
-		"model_mode": "leakage_safe_non_absolute_death",
+		"leakage_columns_removed": leakage_columns,
+		"model_mode": MODE_CONFIG[mode]["model_mode"],
 		"train_test_ratio": "80/20",
 		"train_size": len(X_train),
 		"test_size": len(X_test),
@@ -140,13 +195,45 @@ def build_and_train_model() -> None:
 		"accuracy": float(accuracy),
 		"confusion_matrix": cm,
 		"model_name": "RandomForestClassifier",
-		"model_params": model.get_params(),
+		"model_params": pipeline.named_steps["model"].get_params(),
 		"random_state": RANDOM_STATE,
 	}
 
-	with METADATA_PATH.open("w", encoding="utf-8") as f:
+	with metadata_path.open("w", encoding="utf-8") as f:
 		json.dump(metadata, f, ensure_ascii=False, indent=2)
+
+	print(f"Model saved to: {model_path}")
+	print(f"Metadata saved to: {metadata_path}")
+
+	if accuracy < 0.90:
+		print("Warning: Accuracy is below 90%. Consider feature refinement or hyperparameter tuning.")
+
+
+def parse_args() -> argparse.Namespace:
+	parser = argparse.ArgumentParser(description="Train the cancer survival model.")
+	parser.add_argument(
+		"--mode",
+		choices=["normal", "until_time"],
+		default="until_time",
+		help="normal uses the absolute-death signal, until_time removes leakage.",
+	)
+	parser.add_argument(
+		"--data-path",
+		default=str(DATA_PATH),
+		help="Path to the training CSV file.",
+	)
+	parser.add_argument(
+		"--external-training-data",
+		default=None,
+		help="Optional external CSV path supplied by the doctor.",
+	)
+	return parser.parse_args()
 
 
 if __name__ == "__main__":
-	build_and_train_model()
+	args = parse_args()
+	build_and_train_model(
+		mode=args.mode,
+		data_path=Path(args.data_path),
+		external_training_data=args.external_training_data,
+	)
