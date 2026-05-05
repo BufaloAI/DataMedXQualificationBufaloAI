@@ -522,6 +522,47 @@ body::before {
 	gap: 14px;
 }
 
+.narrative h3 {
+	font-size: 1.3rem;
+	margin: 16px 0 8px;
+	color: var(--text);
+}
+
+.narrative p {
+	margin: 0 0 12px;
+	line-height: 1.6;
+	color: var(--muted);
+}
+
+.narrative ul,
+.narrative ol {
+	color: var(--muted);
+	line-height: 1.7;
+}
+
+.narrative ul li,
+.narrative ol li {
+	margin-bottom: 12px;
+}
+
+.narrative code {
+	background: rgba(255, 255, 255, 0.08);
+	padding: 2px 6px;
+	border-radius: 4px;
+	font-family: "SFMono-Regular", Consolas, monospace;
+	color: #a6d9ff;
+	font-size: 0.95em;
+}
+
+.narrative img {
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
 .mode-comparison {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));

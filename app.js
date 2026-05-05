@@ -700,65 +700,7 @@ function setupMainPage() {
 }
 
 function setupModelPage() {
-	const page = document.querySelector("[data-role='model-page']");
-	if (!page) {
-		return;
-	}
-
-	page.innerHTML = `
-		<section class="hero hero-compact">
-			<div>
-				<p class="eyebrow">Model açıklaması</p>
-				<h1>Model nasıl çalışıyor?</h1>
-				<p>
-					Bu sayfa, Random Forest tabanlı ölüm durumu modelinin veri akışı, sızıntı farkı ve SHAP yorumunu özetler.
-				</p>
-			</div>
-			<a class="ghost-link" href="index.html">Ana sayfaya dön</a>
-		</section>
-
-		<section class="panel narrative">
-			<h2>İki modun farkı</h2>
-			<div class="mode-comparison">
-				<article>
-					<h3>Normal model</h3>
-					<p>Ölüm tarihi sinyalinden türetilen ek bilgiyle öğrenir. Skor yüksek görünse de bu akış gerçek klinik kullanım için fazla iyimser olabilir.</p>
-				</article>
-				<article>
-					<h3>Until_time model</h3>
-					<p>Ölüm tarihi ve türevlerini dışarıda bırakır. SHAP yorumları bu modda daha güvenlidir ve yorumlanabilirliği daha yüksektir.</p>
-				</article>
-			</div>
-		</section>
-
-		<section class="panel narrative">
-			<h2>Teknik akış</h2>
-			<ol class="steps-list">
-				<li>CSV okunur ve <strong>${TARGET_COLUMN}</strong> sütunu temizlenir.</li>
-				<li>Sayısal alanlara medyan, kategorik alanlara en sık değer ile doldurma uygulanır.</li>
-				<li>Kategorik alanlar OrdinalEncoder ile sayısallaştırılır.</li>
-				<li>Random Forest tahmin yapar; SHAP TreeExplainer ise ağaç tabanlı açıklama üretir.</li>
-			</ol>
-		</section>
-
-		<section class="panel narrative">
-			<h2>CSV şeması</h2>
-			<p>Hasta verisi için yalnızca özellik sütunları gerekir. Eğitim verisi için aynı sütunlara ek olarak hedef sütun gerekir.</p>
-			<div class="schema-grid" data-role="schema"></div>
-		</section>
-
-		<section class="panel narrative">
-			<h2>SHAP neden önemli?</h2>
-			<p>
-				SHAP, modelin tahmini yükselten ve düşüren etkileri her örnek için ayrıştırır. Bu projede öne çıkan ana faktörler albumin, üre, CRP, kalsiyum, LDH ve böbrek fonksiyonlarıdır.
-			</p>
-			<p>
-				Önemli not: SHAP açıklamaları bir tedavi reçetesi değildir. Klinik ekip, bu işaretleri laboratuvar trendi, görüntüleme ve hasta öyküsüyle birlikte yorumlamalıdır.
-			</p>
-		</section>
-	`;
-
-	const schemaContainer = page.querySelector("[data-role='schema']");
+	const schemaContainer = document.querySelector("[data-role='schema']");
 	if (schemaContainer) {
 		renderSchemaSections(schemaContainer);
 	}

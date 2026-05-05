@@ -9,7 +9,289 @@
 </head>
 <body>
 	<div class="page-shell">
-		<main data-role="model-page"></main>
+		<header class="hero hero-compact">
+			<div>
+				<p class="eyebrow">Model Mimarisi & Açıklamalar</p>
+				<h1>Model Nasıl Çalışıyor?</h1>
+				<p>
+					Bu sayfa, Random Forest modelinin veri işleme akışını, karar mekanizmasını ve SHAP ile yorumlanabilirliğini
+					adım adım açıklar.
+				</p>
+			</div>
+			<a class="ghost-link" href="index.html">
+				<img src="main_menu.png" alt="Ana Menüye Dön" style="width: 24px; height: 24px; margin-right: 8px; vertical-align: middle;" />
+				Ana sayfaya dön
+			</a>
+		</header>
+
+		<main class="stacked-layout">
+			<!-- Feature Engineering Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">Adım 1: Özellik Mühendisliği</p>
+						<h2>Lab Ölçümleri Nasıl Dönüştürülür?</h2>
+					</div>
+				</div>
+				<p>
+					Hastalardan alınan laboratuvar ölçümleri zaman içinde değişir. Bu ölçümleri model için anlamlı özelliklere
+					dönüştürüyoruz. Her laboratuvar parametresi (albumin, üre, CRP vb.) için <strong>dört farklı metrik</strong>
+					hesaplanır:
+				</p>
+				<ul class="recommendation-list">
+					<li><strong>Mean (ortalama):</strong> Hastanın o laboratuvar parametresinin <em>tüm ölçümlerinin ortalaması</em>. Genel durumun bölgesini gösterir.</li>
+					<li><strong>Count (sayı):</strong> Bu laboratuvar parametresi için <em>kaç ölçüm yapıldığı</em>. Takip sıklığı hakkında bilgi verir.</li>
+					<li><strong>Last (son):</strong> <em>En son alınan ölçüm değeri</em>. Hastanın güncel durumunu yansıtır.</li>
+					<li><strong>Slope (eğim):</strong> Bu ölçümlere en iyi uyan çizginin <em>eğimi</em>. Parametrenin zaman içinde iyileşip kötüleşip kötüleştiğini gösterir.</li>
+				</ul>
+				<div style="margin: 24px 0; border-radius: 16px; overflow: hidden; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08);">
+					<img src="feature_engineering_trajectory.svg" alt="Feature Engineering Trajectory" style="width: 100%; height: auto; display: block;">
+				</div>
+				<p style="color: var(--muted); font-style: italic;">
+					Yukarıdaki grafik, kalsiyum ölçümlerinin zaman içindeki seyrini göstermektedir. Model bu trendlerden
+					mean, count, last ve slope özniteliklerini çıkarır ve bunları tahmin için kullanır.
+				</p>
+			</section>
+
+			<!-- Random Forest Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">Adım 2: Karar Mekanizması</p>
+						<h2>Random Forest Modeli Nasıl Tahmin Yapar?</h2>
+					</div>
+				</div>
+				<p>
+					Random Forest, <strong>yüzlerce karar ağacı</strong> oluşturur. Her ağaç bağımsız olarak tutarlı tahmin kuralları öğrenir.
+					Nihai tahmin, tüm ağaçların "oylarının çoğunluğu" kullanılarak çıkarılır:
+				</p>
+				<ul class="recommendation-list">
+					<li><strong>Çoğu ağaç "Hayatta Kaldı" derse:</strong> Model "Düşük Risk" (Hayatta Kalma olasılığı yüksek) der.</li>
+					<li><strong>Çoğu ağaç "Öldü" derse:</strong> Model "Yüksek Risk" (Ölüm olasılığı yüksek) der.</li>
+					<li><strong>Ağaçlar eşit bölünmüşse:</strong> Model belirsiz bir puan verir.</li>
+				</ul>
+				<p>
+					Bu demokrasi yaklaşımı, modelin <strong>aşırı uydurmadan</strong> kaçınmasını ve daha <strong>robust tahminler</strong>
+					yapmasını sağlar. Herhangi bir tek ağacın hata ya da önyargısı diğer ağaçlar tarafından ağırlaştırılır.
+				</p>
+				<div style="margin: 24px 0; border-radius: 16px; overflow: hidden; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08);">
+					<img src="random_forest_intuition.svg" alt="Random Forest Intuition" style="width: 100%; height: auto; display: block;">
+				</div>
+				<p style="color: var(--muted); font-style: italic;">
+					Yukarıdaki diyagram, üç karar ağacının nasıl farklı yollardan gidebileceğini, ancak çoğunluk oyuyla
+					son kararın verildiğini göstermektedir.
+				</p>
+			</section>
+
+			<!-- SHAP Explanation Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">Adım 3: Yorumlanabilirlik</p>
+						<h2>SHAP: Model Tahmini Nasıl Açıklanır?</h2>
+					</div>
+				</div>
+				<p>
+					SHAP (SHapley Additive exPlanations), her hasta için modelin tahmini nasıl ulaştığını açıklar.
+					Oyun teorisinden bir konsept kullanarak, <strong>her özniteliğin tahmini etkileme derecesini</strong>
+					ölçer:
+				</p>
+				<ul class="recommendation-list">
+					<li><strong>Baseline (Başlangıç Değeri):</strong> Eğitim setindeki <em>tüm hastaların ortalama ölüm olasılığı</em>. Örnek: 0.42 (42%).</li>
+					<li><strong>SHAP Değerleri:</strong> Her öznitelik bu baseline'ı <em>yukarı veya aşağı hareket ettirir</em>.</li>
+					<li><strong>Nihai Tahmin:</strong> Baseline + tüm SHAP etkileri = son olasılık.</li>
+				</ul>
+				<p>
+					Öznitelikler eğitim verilerinde sık görülen değerler normal kabul edilir ve sıfıra yakın SHAP etkisine sahiptir.
+					Anormal değerler (örneğin, çok düşük albumin) tahmini belirgin şekilde etkiler.
+				</p>
+				<div style="margin: 24px 0; border-radius: 16px; overflow: hidden; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08);">
+					<img src="shap_waterfall_sketch.svg" alt="SHAP Waterfall Explanation" style="width: 100%; height: auto; display: block;">
+				</div>
+				<p style="color: var(--muted); font-style: italic;">
+					Yukarıdaki waterfall grafik, baseline'dan başlayarak her özniteliğin riski nasıl etkilediğini göstermektedir.
+					Kırmızı (korallı) çubuklar riski yukarı, yeşil çubuklar riski aşağı iterler.
+				</p>
+			</section>
+
+			<!-- Model Modes Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">İki Model Modu Arasındaki Fark</p>
+						<h2>Normal vs. Until_time Modeli</h2>
+					</div>
+				</div>
+				<div class="mode-comparison">
+					<article>
+						<h3>Normal Model</h3>
+						<p>
+							<strong>Özellik:</strong> Ölüm tarihi sinyalinden türetilen ek bilgiyi içerir
+							(ölüm tarihinin var olup olmadığı).
+						</p>
+						<p>
+							<strong>Sonuç:</strong> Daha yüksek doğruluk (≈100%), ancak bu bilgi eğitim sırasında "sızıntı"
+							yaratıyor. Tahminler gerçekten başarılı görünür.
+						</p>
+						<p>
+							<strong>Kullanım:</strong> Karşılaştırma ve benchmark amaçlıdır. Üretime çıkarmak için önerilmez.
+						</p>
+					</article>
+					<article>
+						<h3>Until_time Model (Önerilen)</h3>
+						<p>
+							<strong>Özellik:</strong> Ölüm tarihi ve türevlerini tamamen dışarıda bırakır. Sadece laboratuvar ve
+							demografik verileri kullanır.
+						</p>
+						<p>
+							<strong>Sonuç:</strong> Biraz daha düşük doğruluk (≈85%), ancak gerçekçi ve sizma-güvenli bir model.
+						</p>
+						<p>
+							<strong>Kullanım:</strong> Klinik uygulamalar ve SHAP interpretasyonu için idealdir. Bu modun
+							açıklamaları güvenilirdir.
+						</p>
+					</article>
+				</div>
+			</section>
+
+			<!-- Technical Flow Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">İç Mekanizmalar</p>
+						<h2>Teknik Veri Akışı</h2>
+					</div>
+				</div>
+				<ol class="steps-list">
+					<li>
+						<strong>CSV Yükleme:</strong> Hasta veya eğitim verisi CSV dosyasından okunur. Hedef sütun
+						(<code>ölüm durumu</code>) temizlenir ve eksik değerler kontrol edilir.
+					</li>
+					<li>
+						<strong>Eksik Veri Doldurma (Imputation):</strong> Sayısal alanlar için <em>medyan</em>,
+						kategorik alanlar için <em>en sık değer</em> kullanılır. Bu ağaç modelleri için güvenlidir.
+					</li>
+					<li>
+						<strong>Kategorik Kodlama:</strong> Kategorik sütunlar (kanser türü, cinsiyet vb.)
+						<code>OrdinalEncoder</code> kullanılarak sayılara dönüştürülür.
+					</li>
+					<li>
+						<strong>Model Tahmin:</strong> Random Forest ağacı tahmin yapar (0 = hayatta kaldı, 1 = öldü).
+					</li>
+					<li>
+						<strong>SHAP Açıklaması:</strong> TreeExplainer, her ağacın katkısını analiz ederek öznitelik
+						başına SHAP değerleri hesaplar.
+					</li>
+				</ol>
+			</section>
+
+			<!-- Setup Instructions Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">Kendi Verilerinizle Çalışma</p>
+						<h2>Kurulum ve Çalıştırma Talimatları</h2>
+					</div>
+				</div>
+
+				<h3 style="margin-top: 20px;">1. Repository'yi Klonlayın</h3>
+				<p>Aşağıdaki komutu terminalde çalıştırarak projeyi indirin:</p>
+				<p class="command-inline">git clone https://github.com/BufaloAI/DataMedXQualificationBufaloAI.git</p>
+				<p class="command-inline">cd DataMedXQualificationBufaloAI</p>
+
+				<h3 style="margin-top: 20px;">2. Python Ortamını Ayarlayın</h3>
+				<p>
+					Projeyi çalıştırmak için Python 3.8+ ve yüklenmiş bağımlılıklar gereklidir. Sanal ortam oluşturun
+					ve paketi yükleyin:
+				</p>
+				<p class="command-inline">python -m venv .venv</p>
+				<p class="command-inline">source .venv/bin/activate  # Linux/Mac</p>
+				<p class="command-inline">.venv\Scripts\activate  # Windows</p>
+				<p class="command-inline">pip install -r requirements.txt</p>
+
+				<h3 style="margin-top: 20px;">3. Kendi Eğitim Verilerinizle Modeli Yeniden Eğitin</h3>
+				<p>
+					<code>until_time</code> modunu kendi verilerinizle eğitmek için:
+				</p>
+				<p class="command-inline">python non_absolute_death.py --mode until_time --training-data your_training_data.csv</p>
+				<p style="color: var(--muted);">
+					Bu komut <code>your_training_data.csv</code> dosyanızı kullanarak yeni bir model oluşturacak.
+					Dosya şu sütunları içermelidir:
+				</p>
+				<div style="background: rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 14px; margin: 12px 0; border-left: 3px solid var(--accent);">
+					kanser_turu, cinsiyet, doğum tarihi, department, oluşturma tarihi, epikriz, atc kod, işlem tipi,
+					hba1c_mean, hba1c_last, hba1c_count, hba1c_slope, ... (tüm laboratuvar parametreleri), <strong>ölüm durumu</strong>
+				</div>
+
+				<h3 style="margin-top: 20px;">4. Web Arayüzünü Çalıştırın</h3>
+				<p>Modeli web paneli üzerinden görüntülemek için:</p>
+				<p class="command-inline">python -m http.server 8000</p>
+				<p>Tarayıcınızda <code>http://localhost:8000</code> adresini ziyaret edin.</p>
+
+				<h3 style="margin-top: 20px;">5. Normal Modu İncelemek İçin</h3>
+				<p>Karşılaştırma için normal modeli (ölüm tarihi sinyalini içeren) da çalıştırabilirsiniz:</p>
+				<p class="command-inline">python non_absolute_death.py --mode normal --training-data your_training_data.csv</p>
+
+				<div style="background: rgba(126, 224, 164, 0.12); border-radius: 14px; padding: 18px; margin: 20px 0; border-left: 4px solid #7ee0a4;">
+					<p style="margin: 0; color: #b9ffd0; font-weight: 600;">💡 İpucu: CSV Şema Doğrulaması</p>
+					<p style="margin: 8px 0 0;">
+						CSV dosyası yüklemeden önce, ana sayfada "Eğitim verisi" bölümünü kullanarak şematik doğrulama yapabilirsiniz.
+						Eksik veya hatalı sütunlar sarı uyarı ile gösterilecektir.
+					</p>
+				</div>
+			</section>
+
+			<!-- Important Notes Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">Önemli Notlar</p>
+						<h2>SHAP Yorumlamalarının Klinik Kullanımı</h2>
+					</div>
+				</div>
+				<p>
+					SHAP açıklamaları, modelin why kararını matematiksel olarak açıklamak yardımcı olur, ancak bunlar
+					<strong>tedavi rehberi değildir</strong>. Klinik karar almaya katkıda bulunması için:
+				</p>
+				<ul class="recommendation-list">
+					<li>
+						SHAP işaretlerini <strong>laboratuvar trendleriyle</strong> birlikte değerlendirin.
+					</li>
+					<li>
+						Model çıktısını <strong>radyoloji bulguları, performans durumu ve hasta öyküsüyle</strong> birleştirin.
+					</li>
+					<li>
+						Her hasta için <strong>multidisipliner takı görüşü</strong> alınmalıdır.
+					</li>
+					<li>
+						Modeldeki öznitelikler (albumin, üre, CRP vb.) yalnızca <strong>ilişkisel</strong> markerler;
+						nedensel ilişki kurmayın.
+					</li>
+				</ul>
+			</section>
+
+			<!-- CSV Schema Section -->
+			<section class="panel narrative">
+				<div class="section-head">
+					<div>
+						<p class="eyebrow">Veri Yapısı</p>
+						<h2>CSV Şema Belirtimi</h2>
+					</div>
+				</div>
+				<p>
+					Hasta verisi minimum, eğitim verisi ise hedef sütun dahil olmak üzere tüm sütunları içermelidir.
+				</p>
+				<div data-role="schema"></div>
+			</section>
+
+			<!-- Footer Navigation -->
+			<section class="panel" style="text-align: center; padding: 24px; background: rgba(255, 255, 255, 0.03);">
+				<a class="primary-link" href="index.html">
+					<img src="main_menu.png" alt="Ana Menüye Dön" style="width: 24px; height: 24px; margin-right: 8px; vertical-align: middle;" />
+					Ana sayfaya dön
+				</a>
+			</section>
+		</main>
 	</div>
 </body>
 </html>
